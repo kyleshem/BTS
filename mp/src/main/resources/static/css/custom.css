@@ -1,0 +1,8 @@
+.crossOut{
+	color: #8c8c8c;
+    font-style: italic;
+    text-decoration: line-through;
+    text-decoration-line: line-through;
+    text-decoration-style: initial;
+    text-decoration-color: initial;
+}

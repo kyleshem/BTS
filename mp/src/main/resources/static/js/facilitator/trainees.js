@@ -1,52 +1,133 @@
+
+    
 $(function() {
-	$.getJSON( "http://localhost:8080/api/users", {
-	    format: "json"
-	  })
-	    .done(function( data ) {
-	      $.each( data.items, function( i, item ) {
-	        $( "<div>" ).attr( "class","hehe").appendTo( "#testDiv" );
-	        if ( i === 3 ) {
-	          return false;
-	        }
-	      });
-	    });
+    var plans = [[]];
+
+    $.ajax({
+        dataType: "json",
+        url: "http://localhost:8080/api/plan/",
+    }).done(function(response) {
+    	var modules = [];
+		plans.splice(0,1,[]);
+    	for(var i=0; i < response.length; i++) {
+    		if(response === undefined){
+    			console.log(response[i].name);
+    			console.log('its now undefined');
+    			break;
+    		} else {
+    			console.log(response[i].planId-1);
+    			console.log(response[i].moduleId-1);
+    			console.log(response[i].name);
+    			plans[]
+    			
+    			//plans[response[i].planId-1].splice(response[i].moduleId-1,1,response[i].name);
+    			//console.log(plans[response[i].planId-1]);
+    		}
+        }
+    	console.log(plans);
+    });
+
+    
+    $("#userTable").DataTable({
+        ajax: {
+            url: "http://localhost:8080/api/users",
+            dataSrc: ''
+        },
+        saveState: true,
+        order: [
+            [3, "desc"]
+        ],
+        columns: [{
+                data: "id"
+            },
+            {
+                // Trainee Name
+                data: null,
+                render: function(data, type, row) {
+                    if (data.middleName === "N/A") {
+                        return "Not available";
+                    }
+                    if (data.middleName === "") {
+                        return data.firstName + " " + data.lastName;
+                    } else {
+                        return data.firstName + " " + data.middleName + " " + data.lastName;
+                    }
+                }
+            },
+            {
+                // Module Multiselect
+                data: null,
+                render: function(data, type, row) {
+                    var testOut = '<select id="example-getting-started" multiple="multiple" name="' + data.id + '">';
+
+	                if(data.planId === 0){
+	                	return "Invalid Plan";
+	                } else {
+
+                    	for (var i = 1; i < plans[1].length; i++) {
+	                        testOut += '<option value="' + plans[data.planId][i] + '">' + plans[data.planId][i] + '</option>';
+	                    }
+	                }
+                    testOut += '</select>';
+
+                    $('select[name=' + data.id + ']').multiselect({
+                        onChange: function(option, checked, select) {
+                            var val = $(option).val();
+                            if (checked) {
+                                $(".multiselect-container li.active").find('input[value=' + val + ']').parent().addClass("crossOut");
+                            } else {
+                                $(".multiselect-container li").find('input[value=' + val + ']').parent().removeClass("crossOut");
+                            }
+                        }
+                    });
+
+                    return testOut;
+                }
+            },
+            {
+                // Progress Bar
+                data: null,
+                render: function(data, type, row) {
+                    return '<div class="progress" style="height: 5px;">' +
+                        '<div class="progress-bar bg-green" role="progressbar" style="width: 55%;" aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>' +
+                        '</div>';
+                }
+            },
+            {
+                // Role Name
+                data: null,
+                render: function(data, type, row) {
+                    return data.roleName.substring(data.roleName.indexOf("_") + 1);
+                }
+            },
+            {
+                // Date Created
+                data: null,
+                render: function(data, type, row) {
+                    return moment.utc(data.createdAt).format("MM/DD/YYYY");
+                }
+            },
+        ],
+        columnDefs: [{
+                targets: 0,
+                width: "5%"
+            },
+            {
+                targets: 1,
+                width: "60"
+            },
+            {
+                targets: 2,
+                width: "10%"
+            },
+            {
+                targets: 3,
+                width: "10%"
+            },
+            {
+                targets: 4,
+                width: "10%"
+            }
+        ]
+    });
 });
-
-
-//<tr>
-//   <td class="text-center">
-//      <div class="avatar d-block" style="background-image: url(demo/faces/female/26.jpg)">
-//         <span class="avatar-status bg-green"></span>
-//      </div>
-//   </td>
-//   <td>
-//      <div>Elizabeth Martin</div> 
-//      <div class="small text-muted">
-//         System Applications Engineer Trainee
-//      </div>
-//   </td>
-//   <td>
-//      <div>123456789</div>
-//   </td>
-//   <td>
-//      <div class="small text-muted">Last login</div>
-//      <div>4 minutes ago</div>
-//   </td>
-//   <td class="text-center">
-//      <div class="mx-auto chart-circle chart-circle-xs" data-value="0.42" data-thickness="3" data-color="red">
-//         <div class="chart-circle-value">42%</div>
-//      </div>
-//   </td>
-//   <td class="text-center">
-//      <div class="item-action dropdown">
-//         <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
-//         <div class="dropdown-menu dropdown-menu-right">
-//            <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-tag"></i> Action </a>
-//            <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-edit-2"></i> Another action </a>
-//            <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-message-square"></i> Something else here</a>
-//            <div class="dropdown-divider"></div>
-//            <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-link"></i> Separated link</a>
-//         </div>
-//      </div>
-//   </td>
-//</tr>
