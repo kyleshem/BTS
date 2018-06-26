@@ -20,4 +20,7 @@ public class UserDetailDto {
 	private String roleName;
 	
 	private Date createdAt; 
+	
+	private Integer planId;
+
 }
