@@ -3,12 +3,12 @@ package com.enwan.mp.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.enwan.mp.dto.PlanDetailDto;
+//import com.enwan.mp.dto.TraineeProgressDto;
 import com.enwan.mp.dto.UserDetailDto;
-import com.enwan.mp.model.Role;
-import com.enwan.mp.model.User;
 import com.enwan.mp.repository.RoleRepository;
 import com.enwan.mp.repository.UserRepository;
 import com.enwan.mp.service.UserService;
@@ -38,5 +38,9 @@ public class UserServiceImpl implements UserService {
 		return userRepository.userDetailView("ROLE_TRAINEE");
 	}
 
-	
+	@Override
+	public List<PlanDetailDto> findAllPlan() {
+		return userRepository.findAllBy();
+	}
+
 }
